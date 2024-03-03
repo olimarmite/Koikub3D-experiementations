@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 01:12:45 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/21 01:28:21 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/28 06:11:43 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	game_init(t_cub *data, t_canvas *canvas)
 	data->game_data.map_data.ceil_color.d = data->celling;
 	data->game_data.map_data.floor_color.d = data->floor;
 	data->game_data.inputs = &data->inputs;
+	data->game_data.audio_buffers = data->audio_buffers;
 	data->game_data.map_data.player_spawn.dir = data->player.dir;
 	data->game_data.map_data.player_spawn.pos = data->player.pos;
 	data->game_data.map_data.player_spawn.pos.z = 1;
