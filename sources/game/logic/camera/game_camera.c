@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:54:17 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/28 06:29:18 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:20:00 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,48 @@ static void	update_effects(t_game_data *data)
 	}
 }
 
+// #define TILT_FACTOR 0.02 // Adjust for tilt intensity
+#define BOB_AMPLITUDE 0.02 // Vertical bob amplitude, adjust for effect intensity
+#define BOB_FREQUENCY 0.1 // Frequency of the bobbing effect
+#define ROTATION_AMPLITUDE 0.00 // Tilt rotation amplitude, adjust for effect intensity
+
+// void update_camera_with_bobbing(YourDataType *data) {
+
+//     // Rest of your camera update logic...
+// }
+
+
+
 void	game_update_camera(t_game_data *data)
 {
-	double	tilt;
 
-	data->state.player_camera.dir = data->state.player->physics.dir;
-	data->state.player_camera.right = data->state.player->physics.right;
-	data->state.player_camera.pos = data->state.player->physics.pos;
-	data->state.player_camera.velocity = data->state.player->physics.velocity;
-	tilt = _dot_product_3d(&data->state.player_camera.velocity,
-			&data->state.player_camera.right);
-	data->state.player_camera.tilt = tilt * TILT_FACTOR;
+	double tilt, speed, bobOffset, rotationTilt;
+
+    // Update camera base position and direction as before
+    data->state.player_camera.dir = data->state.player->physics.dir;
+    data->state.player_camera.right = data->state.player->physics.right;
+    data->state.player_camera.pos = data->state.player->physics.pos;
+    data->state.player_camera.velocity = data->state.player->physics.velocity;
+
+    // Calculate tilt and speed for bobbing effects
+    tilt = _dot_product_3d(&data->state.player_camera.velocity, &data->state.player_camera.right);
+    data->state.player_camera.tilt = tilt * TILT_FACTOR;
+    speed = sqrt(data->state.player_camera.velocity.vec[0] * data->state.player_camera.velocity.vec[0] +
+                 data->state.player_camera.velocity.vec[1] * data->state.player_camera.velocity.vec[1]);
+
+	// if (speed > 0.001)
+		// speed = 0.1;
+
+    // Apply vertical bobbing effect based on player's speed
+    bobOffset = BOB_AMPLITUDE * sin((double)data->state.time_since_start * BOB_FREQUENCY);
+    data->state.player_camera.pos.z += bobOffset;
+
+	printf("speed: %f\n", speed);
+    // Apply a slight rotational tilt effect for added realism
+    rotationTilt = ROTATION_AMPLITUDE * cos((double)data->state.time_since_start * BOB_FREQUENCY);
+    // Assuming you have a mechanism to apply this tilt. This might represent a pitch or roll depending on your camera setup
+    data->state.player_camera.tilt += rotationTilt; // Modify this according to how your camera's rotation is handled
+
 	update_effects(data);
 	// Définir la position de l'auditeur
 	ALfloat listenerPos[] = {data->state.player_camera.pos.x, data->state.player_camera.pos.y, 0};

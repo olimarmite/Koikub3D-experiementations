@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 00:11:56 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/21 18:45:19 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 08:36:24 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # define TILT_FACTOR 0.3
 # define DEFAULT_FOV 512
-# define DEFAULT_PLAYER_ACCELERATION 0.1
+# define DEFAULT_PLAYER_ACCELERATION 0.05
 # define DEFAULT_PLAYER_DECELERATION 0.3
 # define DEFAULT_PLAYER_ROTATION_SPEED 0.1
 # define DEFAULT_PLAYER_RADIUS 0.25

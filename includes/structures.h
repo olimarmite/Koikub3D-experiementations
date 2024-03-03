@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 03:24:57 by motero            #+#    #+#             */
-/*   Updated: 2024/02/28 06:13:27 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:27:07 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,12 @@ typedef enum e_game_assets
 typedef enum e_audio_assets
 {
 	PENGUIN_WALK_SOUND,
+	AMBIANT_DRONE_SOUND,
+	WALK_STONE_SOUND_00,
+	WALK_STONE_SOUND_01,
+	WALK_STONE_SOUND_02,
+	WALK_STONE_SOUND_03,
+	WALK_STONE_SOUND_04,
 	AUDIO_ASSET_COUNT
 }	t_audio_assets;
 
@@ -555,13 +561,32 @@ typedef struct s_3d_render
 typedef struct s_entity_player_data
 {
 	t_vector4d	right;
+	ALuint		audio_footstep_source[5];
+	int			last_footstep_sound;
+	int			last_footstep_sound_time;
+	int			footstep_interval;
 }				t_entity_player_data;
 
 typedef struct s_entity_penguin_data
 {
 	t_vector4d	right;
 	ALuint		audio_source;
+	ALuint		audio_footstep_source[5];
+	int			last_footstep_sound;
+	int			last_footstep_sound_time;
+	int			footstep_interval;
 }				t_entity_penguin_data;
+
+typedef struct s_entity_audio_box_data
+{
+	ALuint			audio_source;
+	// bool			is_continuous;
+	// unsigned int	last_play_time;
+	// unsigned int	current_interval_duration;
+	// unsigned int	play_interval;
+	// double			play_interval_variance;
+}				t_entity_audio_box_data;
+
 
 typedef struct s_entity_torch_data
 {
@@ -605,7 +630,8 @@ typedef enum e_entity_type
 	ENTITY_DEFAULT,
 	ENTITY_PLAYER,
 	ENTITY_TORCH,
-	ENTITY_PENGUIN
+	ENTITY_PENGUIN,
+	ENTITY_AUDIO_BOX
 }					t_entity_type;
 
 typedef enum e_collision_model_type

@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 14:03:25 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/28 06:26:57 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 09:34:27 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,18 @@ static void	_init_penguin_data(
 	self->physics.collision_model.dynamic_cylinder.radius
 		= DEFAULT_PLAYER_RADIUS;
 	alGenSources(1, &data->audio_source);
-	alSourcei(data->audio_source, AL_BUFFER, game_data->audio_buffers[PENGUIN_WALK_SOUND]);
-	ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
-	alSourcefv(data->audio_source, AL_POSITION, sourcePos);
-	alSourcePlay(data->audio_source);
+	// alSourcei(data->audio_source, AL_BUFFER, game_data->audio_buffers[PENGUIN_WALK_SOUND]);
+	// ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
+	// alSourcefv(data->audio_source, AL_POSITION, sourcePos);
+	// alSourcePlay(data->audio_source);
+
+	alGenSources(5, data->audio_footstep_source);
+	alSourcei(data->audio_footstep_source[0], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_00]);
+	alSourcei(data->audio_footstep_source[1], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_01]);
+	alSourcei(data->audio_footstep_source[2], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_02]);
+	alSourcei(data->audio_footstep_source[3], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_03]);
+	alSourcei(data->audio_footstep_source[4], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_04]);
+
 }
 
 void	entity_penguin_draw(t_entity *self, t_game_data *game_data);
