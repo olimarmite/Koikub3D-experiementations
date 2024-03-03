@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 01:12:45 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/28 06:11:43 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 06:46:08 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ int	spawn_default_entities(t_game_data *game_data)
 	if (entity == NULL)
 		return (1);
 	entity = entity_penguin_spawn(game_data, spawn);
+	if (entity == NULL)
+		return (1);
+	entity = entity_audio_box_spawn(game_data, spawn);
 	if (entity == NULL)
 		return (1);
 	return (0);
