@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 14:55:11 by motero            #+#    #+#             */
-/*   Updated: 2024/02/09 04:13:45 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/28 05:49:39 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,16 @@ void	*ft_memcpy(void *dst,
 	const void *src,
 	const size_t size)
 {
-	const size_t	src_alignment_offset = ((uintptr_t)src & 0x1F);
-	const size_t	dst_alignment_offset = ((uintptr_t)dst & 0x1F);
 
-	if (!src || !dst)
-		return (NULL);
-	if (size > 64 && src_alignment_offset < 1 && dst_alignment_offset < 1)
-		return (memcpy_avx(dst, src, size));
-	return (memcpy_x86(dst, src, size));
+	return (memcpy(dst, src, size));
+	// const size_t	src_alignment_offset = ((uintptr_t)src & 0x1F);
+	// const size_t	dst_alignment_offset = ((uintptr_t)dst & 0x1F);
+
+	// if (!src || !dst)
+	// 	return (NULL);
+	// if (size > 64 && src_alignment_offset < 1 && dst_alignment_offset < 1)
+	// 	return (memcpy_avx(dst, src, size));
+	// return (memcpy_x86(dst, src, size));
 }
 
 #else

@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 14:03:25 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/21 02:38:53 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/28 06:26:57 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void	entity_penguin_update(t_entity *self, t_game_data *game_data)
 	(void)self;
 	(void)game_data;
 	entity_penguin_update_movements(self, game_data);
+	ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, 0};
+	t_entity_penguin_data	*const data = self->data;
+	alSourcefv(data->audio_source, AL_POSITION, sourcePos);
 }
 
 void	entity_penguin_destroy(t_entity *self, t_game_data *game_data)
@@ -29,8 +32,11 @@ void	entity_penguin_destroy(t_entity *self, t_game_data *game_data)
 
 static void	_init_penguin_data(
 	t_entity *self,
-	t_spawn spawn)
+	t_spawn spawn,
+	t_game_data *game_data)
 {
+	t_entity_penguin_data	*const data = self->data;
+
 	self->physics.pos = spawn.pos;
 	self->physics.dir = spawn.dir;
 	self->physics.velocity = (t_vector4d){{0, 0, 0, 0}};
@@ -42,6 +48,11 @@ static void	_init_penguin_data(
 		= DEFAULT_PLAYER_HEIGHT;
 	self->physics.collision_model.dynamic_cylinder.radius
 		= DEFAULT_PLAYER_RADIUS;
+	alGenSources(1, &data->audio_source);
+	alSourcei(data->audio_source, AL_BUFFER, game_data->audio_buffers[PENGUIN_WALK_SOUND]);
+	ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
+	alSourcefv(data->audio_source, AL_POSITION, sourcePos);
+	alSourcePlay(data->audio_source);
 }
 
 void	entity_penguin_draw(t_entity *self, t_game_data *game_data);
@@ -62,6 +73,6 @@ t_entity	*entity_penguin_spawn(t_game_data *game_data, t_spawn	spawn)
 	{
 		return (NULL);
 	}
-	_init_penguin_data(self, spawn);
+	_init_penguin_data(self, spawn, game_data);
 	return (self);
 }

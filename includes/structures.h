@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 03:24:57 by motero            #+#    #+#             */
-/*   Updated: 2024/02/20 23:17:27 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/28 06:13:27 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include "dynamic_array.h"
 # include "sparse_array.h"
 # include "settings.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 
 /*############################################################################*/
 /*                              STRUCTURES                                    */
@@ -174,6 +176,14 @@ typedef enum e_game_assets
 	PENGUIN_TEXTURE_WALK_03,
 	GAME_ASSET_COUNT
 }	t_game_assets;
+
+
+typedef enum e_audio_assets
+{
+	PENGUIN_WALK_SOUND,
+	AUDIO_ASSET_COUNT
+}	t_audio_assets;
+
 
 
 typedef enum e_texture_id
@@ -550,6 +560,7 @@ typedef struct s_entity_player_data
 typedef struct s_entity_penguin_data
 {
 	t_vector4d	right;
+	ALuint		audio_source;
 }				t_entity_penguin_data;
 
 typedef struct s_entity_torch_data
@@ -586,6 +597,7 @@ typedef struct s_game_data
 	t_3d_render		game_view_render;
 	t_map_data		map_data;
 	t_inputs		*inputs;
+	ALuint			*audio_buffers;
 }	t_game_data;
 
 typedef enum e_entity_type
@@ -739,12 +751,19 @@ typedef struct s_bsp_tree_node_data
 	t_sector_data	sector_data;
 }	t_bsp_tree_node_data;
 
+typedef struct s_audio_data
+{
+	ALCdevice	*device;
+	ALCcontext	*context;
+}	t_audio_data;
+
 typedef struct s_cub
 {
 	t_img_data				texture[4];
 	t_img_data				screen;
 	t_img_data				ui_images[UI_ASSET_COUNT];
 	t_img_data				game_images[GAME_ASSET_COUNT];
+	ALuint					audio_buffers[AUDIO_ASSET_COUNT];
 	uint32_t				floor;
 	uint32_t				celling;
 	t_point2i				mouse_pos;
@@ -767,6 +786,7 @@ typedef struct s_cub
 	t_inputs				inputs; //TODO: move it
 	t_game_data				game_data;
 	t_texture_manager		texture_manager;
+	t_audio_data			audio_data;
 }				t_cub;
 
 typedef struct s_event_handlers {

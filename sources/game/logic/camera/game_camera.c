@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:54:17 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/21 02:51:14 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/28 06:29:18 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,16 @@ void	game_update_camera(t_game_data *data)
 			&data->state.player_camera.right);
 	data->state.player_camera.tilt = tilt * TILT_FACTOR;
 	update_effects(data);
+	// Définir la position de l'auditeur
+	ALfloat listenerPos[] = {data->state.player_camera.pos.x, data->state.player_camera.pos.y, 0};
+	alListenerfv(AL_POSITION, listenerPos);
+
+	// Définir la direction de l'auditeur
+	ALfloat listenerOri[] = {-data->state.player_camera.dir.x, -data->state.player_camera.dir.y, 0, 0, 0, 1};
+	alListenerfv(AL_ORIENTATION, listenerOri);
+
+	// Définir la position de l'auditeur
+	// ALfloat listenerPos[] = {0.0f, 0.0f, 0.0f}; // Exemple de position
+	// alListenerfv(AL_POSITION, listenerPos);
+
 }

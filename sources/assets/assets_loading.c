@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 01:19:00 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/20 19:52:19 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/28 05:29:52 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int	initialize_and_preload_assets(t_cub *data)
 			GAME_ASSET_COUNT))
 		return (1);
 	if (texture_manager_init(data))
+		return (1);
+	if (initialize_and_preload_audio_assets(data))
 		return (1);
 	return (0);
 }
