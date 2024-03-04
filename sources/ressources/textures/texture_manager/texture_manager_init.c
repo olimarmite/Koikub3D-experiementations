@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 22:27:51 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/20 19:46:54 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 02:18:03 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ t_game_assets			g_penguin_idle_images[] = {
 	PENGUIN_TEXTURE_WALK_00,
 };
 
+
+t_game_assets			g_candle_images[] = {
+	CANDLE_TEXTURE
+};
+
 t_texture_asset_params	g_texture_asset_loader[] = {
 {
 	TEXTURE_DUCK_IDLE,
@@ -69,7 +74,13 @@ t_texture_asset_params	g_texture_asset_loader[] = {
 	g_penguin_idle_images,
 	100,
 	sizeof(g_penguin_idle_images) / sizeof(g_penguin_idle_images[0]),
-}
+},
+{
+	TEXTURE_CANDLE,
+	g_candle_images,
+	100,
+	sizeof(g_candle_images) / sizeof(g_candle_images[0]),
+},
 };
 
 int	load_assets_textures(t_cub *data)

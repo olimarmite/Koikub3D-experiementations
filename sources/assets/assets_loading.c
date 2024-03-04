@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 01:19:00 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/28 05:29:52 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 04:20:35 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static const char	*g_game_asset_paths[GAME_ASSET_COUNT]
 [PENGUIN_TEXTURE_WALK_01] = "assets/entity/penguin/walk/tile001.xpm",
 [PENGUIN_TEXTURE_WALK_02] = "assets/entity/penguin/walk/tile002.xpm",
 [PENGUIN_TEXTURE_WALK_03] = "assets/entity/penguin/walk/tile003.xpm",
+[CANDLE_TEXTURE] = "assets/entity/candle/candle000.xpm",
 };
 
 t_img_data	*get_ui_asset(t_ui_assets asset_enum, t_img_data *ui_images)

@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 02:46:54 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/03 09:39:33 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 22:57:54 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ static void playRandomFootstep(t_entity *self) {
 	alSourcefv(data->audio_footstep_source[nextSound], AL_POSITION, sourcePos);
 	// alSourcef(data->audio_footstep_source[nextSound], AL_ROLLOFF_FACTOR, 0.0f);
     alSourcePlay(data->audio_footstep_source[nextSound]);
-    printf("Playing footstep sound: %d\n", nextSound);
 
     // Update the last played sound index
     data->last_footstep_sound = nextSound;
