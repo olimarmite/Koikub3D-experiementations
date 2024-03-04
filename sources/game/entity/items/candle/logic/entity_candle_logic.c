@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   entity_torch_logic.c                               :+:      :+:    :+:   */
+/*   entity_candle_logic.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 02:02:29 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/03 10:37:44 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/02/21 02:49:59 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include "structures.h"
 #include "maths_utils.h"
 
-static void	_torch_flicker_effect(
-	t_entity_torch_data *data,
+static void	_candle_flicker_effect(
+	t_entity_candle_data *data,
 	t_light *light,
 	t_game_data *game_data)
 {
@@ -48,25 +48,35 @@ static void	_torch_flicker_effect(
 static void	_update_position(
 	t_entity *self,
 	t_light *light,
-	t_3d_render *render)
+	t_game_data *game_data)
 {
-	self->physics.pos.x = (render->camera->pos.x - render->camera->dir.y * 0.15)
-		* 0.9 + self->physics.pos.x * 0.1;
-	self->physics.pos.y = (render->camera->pos.y + render->camera->dir.x * 0.15)
-		* 0.9 + self->physics.pos.y * 0.1;
-	self->physics.pos.z = (render->camera->pos.z + 0.1)
+	t_3d_render			*render;
+
+	render = &game_data->game_view_render;
+	game_data->state.player->physics.dir;
+
+	t_vector4d		player_pos = game_data->state.player->physics.pos;
+	t_vector4d		player_dir = game_data->state.player->physics.dir;
+
+	self->physics.pos.x = (player_pos.x + player_dir.x * 0.7)
+		* 0.5 + self->physics.pos.x * 0.5;
+	self->physics.pos.y = (player_pos.y + player_dir.y * 0.7)
+		* 0.5 + self->physics.pos.y * 0.5;
+	self->physics.pos.z = (player_pos.z + 0.3)
 		* 0.5 + self->physics.pos.z * 0.5;
 	self->physics.dir.x = -(render->camera->dir.x)
-		* 0.2 + self->physics.dir.x * 0.8;
+		* 1 + self->physics.dir.x * 0.0;
 	self->physics.dir.y = -(render->camera->dir.y)
-		* 0.2 + self->physics.dir.y * 0.8;
-	light->pos = self->physics.pos;
+		* 1 + self->physics.dir.y * 0.0;
+	self->physics.right = (t_vector4d){{self->physics.dir.y, -self->physics.dir.x, 0, 0}};
+	light->pos.vec = self->physics.pos.vec + (t_v4d){0, 0, -0.202, 0};
+	light->pos.vec += self->physics.dir.vec * 0.01;
 	light->dir = self->physics.dir;
 }
 
 static void	_update_flickering_params(
 	t_entity *self,
-	t_entity_torch_data *data,
+	t_entity_candle_data *data,
 	t_game_data *game_data)
 {
 	double	dist;
@@ -84,9 +94,9 @@ static void	_update_flickering_params(
 	}
 }
 
-void	entity_torch_update(t_entity *self, t_game_data *game_data)
+void	entity_candle_update(t_entity *self, t_game_data *game_data)
 {
-	t_entity_torch_data	*data;
+	t_entity_candle_data	*data;
 	t_3d_render			*render;
 	t_light				*light;
 
@@ -94,7 +104,7 @@ void	entity_torch_update(t_entity *self, t_game_data *game_data)
 	render = &game_data->game_view_render;
 	light = sparse_array_get(render->lights_data.lights,
 			data->light_id);
-	_update_position(self, light, render);
-	_update_flickering_params(self, data, game_data);
-	_torch_flicker_effect(data, light, game_data);
+	_update_position(self, light, game_data);
+	// _update_flickering_params(self, data, game_data);
+	_candle_flicker_effect(data, light, game_data);
 }

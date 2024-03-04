@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 23:54:17 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/03 09:20:00 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 11:19:23 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	game_update_camera(t_game_data *data)
     bobOffset = BOB_AMPLITUDE * sin((double)data->state.time_since_start * BOB_FREQUENCY);
     data->state.player_camera.pos.z += bobOffset;
 
-	printf("speed: %f\n", speed);
     // Apply a slight rotational tilt effect for added realism
     rotationTilt = ROTATION_AMPLITUDE * cos((double)data->state.time_since_start * BOB_FREQUENCY);
     // Assuming you have a mechanism to apply this tilt. This might represent a pitch or roll depending on your camera setup

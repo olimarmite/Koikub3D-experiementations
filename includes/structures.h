@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 03:24:57 by motero            #+#    #+#             */
-/*   Updated: 2024/03/03 09:27:07 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 02:16:47 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,12 @@ enum e_action { a_move_forward,
 	a_move_down,
 	a_turn_left,
 	a_turn_right,
+	a_run,
 	a_increase_sector_ceil,
 	a_decrease_sector_ceil,
 	a_increase_sector_floor,
 	a_decrease_sector_floor,
+	a_interact,
 	ACTIONS_COUNT};
 
 typedef float			t_vector_f		__attribute__((vector_size (8)));
@@ -174,6 +176,7 @@ typedef enum e_game_assets
 	PENGUIN_TEXTURE_WALK_01,
 	PENGUIN_TEXTURE_WALK_02,
 	PENGUIN_TEXTURE_WALK_03,
+	CANDLE_TEXTURE,
 	GAME_ASSET_COUNT
 }	t_game_assets;
 
@@ -202,6 +205,7 @@ typedef enum e_texture_id
 	TEXTURE_DUCK_WALK,
 	TEXTURE_PENGUIN_WALK,
 	TEXTURE_PENGUIN_IDLE,
+	TEXTURE_CANDLE,
 	TEXTURE_COUNT
 }	t_texture_id;
 
@@ -603,6 +607,21 @@ typedef struct s_entity_torch_data
 	double			flicker_intensity_variance;
 }				t_entity_torch_data;
 
+typedef struct s_entity_candle_data
+{
+	int				light_id;
+	double			light_intensity;
+	unsigned int	current_interval_duration;
+	unsigned int	last_flicker_time;
+	int				flicker_remaining_duration;
+	unsigned int	flicker_duration;
+	unsigned int	flicker_interval;
+	unsigned int	flicker_intensity;
+	double			flicker_interval_variance;
+	double			flicker_duration_variance;
+	double			flicker_intensity_variance;
+}				t_entity_candle_data;
+
 typedef struct s_entity t_entity;
 
 typedef struct s_game_state
@@ -631,7 +650,8 @@ typedef enum e_entity_type
 	ENTITY_PLAYER,
 	ENTITY_TORCH,
 	ENTITY_PENGUIN,
-	ENTITY_AUDIO_BOX
+	ENTITY_AUDIO_BOX,
+	ENTITY_CANDLE
 }					t_entity_type;
 
 typedef enum e_collision_model_type
