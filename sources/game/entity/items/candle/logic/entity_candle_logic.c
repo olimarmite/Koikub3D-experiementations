@@ -58,12 +58,6 @@ static void	_update_position(
 	t_vector4d		player_pos = game_data->state.player->physics.pos;
 	t_vector4d		player_dir = game_data->state.player->physics.dir;
 
-	self->physics.pos.x = (player_pos.x + player_dir.x * 0.7)
-		* 0.5 + self->physics.pos.x * 0.5;
-	self->physics.pos.y = (player_pos.y + player_dir.y * 0.7)
-		* 0.5 + self->physics.pos.y * 0.5;
-	self->physics.pos.z = (player_pos.z + 0.3)
-		* 0.5 + self->physics.pos.z * 0.5;
 	self->physics.dir.x = -(render->camera->dir.x)
 		* 1 + self->physics.dir.x * 0.0;
 	self->physics.dir.y = -(render->camera->dir.y)
@@ -72,26 +66,6 @@ static void	_update_position(
 	light->pos.vec = self->physics.pos.vec + (t_v4d){0, 0, -0.202, 0};
 	light->pos.vec += self->physics.dir.vec * 0.01;
 	light->dir = self->physics.dir;
-}
-
-static void	_update_flickering_params(
-	t_entity *self,
-	t_entity_candle_data *data,
-	t_game_data *game_data)
-{
-	double	dist;
-
-	dist = sqrt(pow(self->physics.pos.x
-				- game_data->map_data.player_spawn.pos.x, 2)
-			+ pow(self->physics.pos.y
-				- game_data->map_data.player_spawn.pos.y, 2));
-	data->flicker_interval = 1000 / (dist + 1);
-	if (data->flicker_interval
-		* (1 + data->flicker_interval_variance)
-		<= data->current_interval_duration)
-	{
-		data->current_interval_duration = data->flicker_interval;
-	}
 }
 
 void	entity_candle_update(t_entity *self, t_game_data *game_data)
@@ -105,6 +79,5 @@ void	entity_candle_update(t_entity *self, t_game_data *game_data)
 	light = sparse_array_get(render->lights_data.lights,
 			data->light_id);
 	_update_position(self, light, game_data);
-	// _update_flickering_params(self, data, game_data);
 	_candle_flicker_effect(data, light, game_data);
 }

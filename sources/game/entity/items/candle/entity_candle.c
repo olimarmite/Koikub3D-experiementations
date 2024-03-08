@@ -27,7 +27,8 @@ void	entity_candle_draw(t_entity *self, t_game_data *game_data)
 	billboard.pos = self->physics.pos;
 	billboard.dir = self->physics.dir;
 	billboard.right = self->physics.right;
-	billboard.size = (t_vector4d){{1, 1, 0, 0}};
+	billboard.size =
+		(t_vector4d){{self->physics.width, self->physics.height, 0, 0}};
 	billboard.texture.texture
 		= &game_data->map_data.texture_manager
 		->textures[TEXTURE_CANDLE];
@@ -74,6 +75,8 @@ static int	_init_candle_data(
 	self->physics.pos.z = 2;
 	self->physics.dir = spawn.dir;
 	self->physics.right = (t_vector4d){{spawn.dir.y, -spawn.dir.x, 0, 0}};
+	self->physics.width = 1;
+	self->physics.height = 1;
 	self_data->light_id = light_spawn_default(&game_data->game_view_render);
 	if (self_data->light_id == -1)
 		return (1);

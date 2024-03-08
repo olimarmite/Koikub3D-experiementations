@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 03:24:57 by motero            #+#    #+#             */
-/*   Updated: 2024/03/04 02:16:47 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 22:49:07 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,7 @@ typedef enum e_img_fit_mode
 typedef struct s_inputs
 {
 	int		action_states[ACTIONS_COUNT];
+	int		action_states_once[ACTIONS_COUNT];
 }			t_inputs;
 
 typedef struct s_tree_node
@@ -569,6 +570,9 @@ typedef struct s_entity_player_data
 	int			last_footstep_sound;
 	int			last_footstep_sound_time;
 	int			footstep_interval;
+	bool		holding_item;
+	int			holding_item_id;
+	int			holding_begin_time;
 }				t_entity_player_data;
 
 typedef struct s_entity_penguin_data
@@ -692,6 +696,8 @@ typedef struct s_entity_physics
 	t_vector4d			acceleration;
 	double				friction;
 	t_collision_model	collision_model;
+	double				height;
+	double				width;
 }				t_entity_physics;
 
 
