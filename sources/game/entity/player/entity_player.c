@@ -49,6 +49,8 @@ static void	_init_player_data(
 		= DEFAULT_PLAYER_HEIGHT;
 	self->physics.collision_model.dynamic_cylinder.radius
 		= DEFAULT_PLAYER_RADIUS;
+	data->holding_item = false;
+	data->holding_item_id = -1;
 	// data->audio_footstep_source[0] =
 
 	alGenSources(5, data->audio_footstep_source);

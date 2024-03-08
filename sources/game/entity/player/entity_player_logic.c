@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 23:19:23 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/03 11:19:54 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:15:53 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,5 @@ void	entity_player_update_movements(t_entity *self, t_game_data *game_data)
 	self->physics.acceleration = world_space_acceleration;
 	_update_player_direction(self, game_data);
 	playRandomFootstep(self);
+	entity_player_update_holding(self, game_data);
 }

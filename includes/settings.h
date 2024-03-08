@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 00:11:56 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/03 08:36:24 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 15:46:24 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # define DEFAULT_PLAYER_ROTATION_SPEED 0.1
 # define DEFAULT_PLAYER_RADIUS 0.25
 # define DEFAULT_PLAYER_HEIGHT 1.5
+
+# define DEFAULT_PLAYER_TAKE_DISTANCE 2
 
 # define DEFAULT_ENTITIES_ARRAY_SIZE 128
 # define DEFAULT_LIGHT_ARRAY_SIZE 128

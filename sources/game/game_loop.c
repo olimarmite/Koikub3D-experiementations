@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 05:47:29 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/20 19:39:02 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:09:33 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	game_update(t_game_data *game_data)
 	entities_update(game_data);
 	game_update_camera(game_data);
 	sector_edit_height_handle_event(game_data);
+	ft_memset(game_data->inputs->action_states_once,
+		0, sizeof(game_data->inputs->action_states_once));
 }
 
 int	game_loop(void *self, t_cub *data)

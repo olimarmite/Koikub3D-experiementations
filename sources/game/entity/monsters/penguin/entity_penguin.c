@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 14:03:25 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/03 09:34:27 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:44:21 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	_init_penguin_data(
 		= DEFAULT_PLAYER_HEIGHT;
 	self->physics.collision_model.dynamic_cylinder.radius
 		= DEFAULT_PLAYER_RADIUS;
-	alGenSources(1, &data->audio_source);
+	// alGenSources(1, &data->audio_source);
 	// alSourcei(data->audio_source, AL_BUFFER, game_data->audio_buffers[PENGUIN_WALK_SOUND]);
 	// ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
 	// alSourcefv(data->audio_source, AL_POSITION, sourcePos);
