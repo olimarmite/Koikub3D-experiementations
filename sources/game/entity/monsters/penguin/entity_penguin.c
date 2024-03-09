@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 14:03:25 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/04 16:44:21 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 04:47:20 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ void	entity_penguin_destroy(t_entity *self, t_game_data *game_data)
 	free(self->data);
 }
 
-static void	_init_penguin_data(
+static int	_init_penguin_data(
 	t_entity *self,
 	t_spawn spawn,
-	t_game_data *game_data)
+	t_game_data *game_data
+	)
 {
 	t_entity_penguin_data	*const data = self->data;
 
@@ -42,12 +43,16 @@ static void	_init_penguin_data(
 	self->physics.velocity = (t_vector4d){{0, 0, 0, 0}};
 	self->physics.acceleration = (t_vector4d){{0, 0, 0, 0}};
 	self->physics.right = (t_vector4d){{spawn.dir.y, -spawn.dir.x, 0, 0}};
-	self->physics.friction = DEFAULT_PLAYER_DECELERATION;
+	self->physics.friction = DEFAULT_PLAYER_DECELERATION * 2;
 	self->physics.collision_model.type = COLLISION_MODEL_DYNAMIC_CYLINDER;
 	self->physics.collision_model.dynamic_cylinder.height
 		= DEFAULT_PLAYER_HEIGHT;
 	self->physics.collision_model.dynamic_cylinder.radius
 		= DEFAULT_PLAYER_RADIUS;
+	if (dijkstra_init(&data->dijkstra, game_data->map_data.portal_count
+			+ game_data->map_data.sector_count))
+		return (1);
+	dijkstra_from_bsp(game_data, &data->dijkstra);
 	// alGenSources(1, &data->audio_source);
 	// alSourcei(data->audio_source, AL_BUFFER, game_data->audio_buffers[PENGUIN_WALK_SOUND]);
 	// ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
@@ -60,6 +65,7 @@ static void	_init_penguin_data(
 	alSourcei(data->audio_footstep_source[2], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_02]);
 	alSourcei(data->audio_footstep_source[3], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_03]);
 	alSourcei(data->audio_footstep_source[4], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_04]);
+	return (0);
 
 }
 

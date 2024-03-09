@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 03:24:57 by motero            #+#    #+#             */
-/*   Updated: 2024/03/04 22:49:07 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 03:52:47 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -395,6 +395,16 @@ typedef struct s_collision_info
 	t_vector4d		collision_normal;
 }					t_collision_info;
 
+
+typedef struct s_dijkstra {
+	int		*distances;
+	int		*previous;
+	int		*visited;
+	int		*graph;
+	int		graph_size;
+}	t_dijkstra;
+
+
 /*############################################################################*/
 /*                              CANVAS STRUCTURES                             */
 /*############################################################################*/
@@ -489,6 +499,8 @@ typedef struct s_map_data
 	t_color				floor_color;
 	t_color				ceil_color;
 	t_spawn				player_spawn;
+	int					portal_count;
+	int					sector_count;
 }	t_map_data;
 
 typedef struct s_circular_queue
@@ -578,6 +590,9 @@ typedef struct s_entity_player_data
 typedef struct s_entity_penguin_data
 {
 	t_vector4d	right;
+	t_dijkstra	dijkstra;
+	t_vector4d	target;
+	bool		have_target;
 	ALuint		audio_source;
 	ALuint		audio_footstep_source[5];
 	int			last_footstep_sound;
@@ -725,7 +740,7 @@ typedef struct s_sector_data
 {
 	double		floor;
 	double		ceil;
-	int			render_flag_id;
+	int			dijkstra_id;
 	t_vector4d	center;
 }	t_sector_data;
 
@@ -746,11 +761,11 @@ typedef struct s_wall_data
 typedef struct s_portal_data
 {
 	int				size;
-	int				render_flag_id;
 	void			*destination;
 	void			*tree_node_ptr;
 	t_texture_ptr	padding_texture_top;
 	t_texture_ptr	padding_texture_bottom;
+	int				dijkstra_id;
 }	t_portal_data;
 
 typedef union u_wall_portal_data

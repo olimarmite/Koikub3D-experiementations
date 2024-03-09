@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 23:19:23 by olimarti          #+#    #+#             */
-/*   Updated: 2024/03/04 16:15:53 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 15:57:36 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,8 @@ static void playRandomFootstep(t_entity *self) {
 
 void	entity_player_update_movements(t_entity *self, t_game_data *game_data)
 {
-	t_entity_player_data	*data;
 	t_vector4d				world_space_acceleration;
 
-	data = self->data;
 	world_space_acceleration
 		= _get_player_world_acceleration(self, game_data);
 	self->physics.acceleration = world_space_acceleration;
