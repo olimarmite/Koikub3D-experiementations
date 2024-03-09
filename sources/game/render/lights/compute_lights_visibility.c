@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 16:04:43 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/20 05:57:19 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 05:13:03 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,32 @@ static void	_compute_light_visibility(t_3d_render *render, t_light *light)
 	if (lens_flare && light_pos_screen.y > 0)
 	{
 		light_pos_screen = project_point(render, light_pos_screen);
-		if (check_ray_reach_dest(render->camera->pos, light->pos, render))
+		bool in_screen = light_pos_screen.x >= 0 && light_pos_screen.x < render->width
+			&& light_pos_screen.y >= 0 && light_pos_screen.y < render->height;
+
+		bool visible = false;
+		if (in_screen)
+		{
+			double depth =	render->buffers.depth[(int)light_pos_screen.y * render->width
+				+ (int)light_pos_screen.x];
+			visible = (depth >= light_pos_screen.z)
+				|| (depth == 0 && check_ray_reach_dest(
+						render->camera->pos, light->pos, render));
+		}
+		else
+		{
+			visible = check_ray_reach_dest(
+					render->camera->pos, light->pos, render);
+		}
+
+		if (visible)
+
 		{
 			if (light->type == DIRECTIONAL_LIGHT)
 				lens_flare->intensity = compute_cone_intensity(
 						&render->camera->pos, &light->pos, &light->dir);
 			else
-				lens_flare->intensity = 1;
+				lens_flare->intensity = light->intensity * 1/ light_pos_screen.z;
 			lens_flare->screen_pos = light_pos_screen;
 			lens_flare->color.d = light->color.d;
 			lens_flare->visible = 1;

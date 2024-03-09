@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/07 23:19:23 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/25 01:30:24 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 15:57:36 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "matrix.h"
 #include "settings.h"
 #include "structures.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 
 static void	normalize_vector_3d(t_vector4d *vec)
 {
@@ -83,6 +85,43 @@ void	_update_player_direction(
 	self->physics.right.y = self->physics.dir.x;
 }
 
+static void playRandomFootstep(t_entity *self) {
+	t_entity_player_data *const data = self->data;
+    int numFootsteps = sizeof(data->audio_footstep_source) / sizeof(data->audio_footstep_source[0]);
+    int nextSound;
+
+	if (self->physics.acceleration.x == 0
+		&& self->physics.acceleration.y == 0)
+	{
+		data->last_footstep_sound_time = 0;
+		return;
+	}
+
+	data->footstep_interval = 10;
+
+	// alSourcefv(data->audio_source, AL_POSITION, sourcePos);
+
+
+	if (data->last_footstep_sound_time > 0)
+	{
+		data->last_footstep_sound_time -= 1;
+		return;
+	}
+
+    do {
+        nextSound = rand() % numFootsteps; // Randomly select the next sound
+    } while (nextSound == data->last_footstep_sound); // Make sure the next sound is different from the last played sound
+
+    // Play the selected sound
+	ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
+	alSourcefv(data->audio_footstep_source[nextSound], AL_POSITION, sourcePos);
+    alSourcePlay(data->audio_footstep_source[nextSound]);
+
+    // Update the last played sound index
+    data->last_footstep_sound = nextSound;
+	data->last_footstep_sound_time = data->footstep_interval;
+}
+
 void	entity_player_update_movements(t_entity *self, t_game_data *game_data)
 {
 	t_vector4d				world_space_acceleration;
@@ -91,4 +130,6 @@ void	entity_player_update_movements(t_entity *self, t_game_data *game_data)
 		= _get_player_world_acceleration(self, game_data);
 	self->physics.acceleration = world_space_acceleration;
 	_update_player_direction(self, game_data);
+	playRandomFootstep(self);
+	entity_player_update_holding(self, game_data);
 }

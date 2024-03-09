@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 19:03:06 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/25 05:14:23 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 03:43:12 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,19 @@ t_entity			*entity_default_spawn(t_game_data *game_data);
 t_entity			*entity_player_spawn(t_game_data *game_data, t_spawn spawn);
 t_entity			*entity_torch_spawn(t_game_data *game_data, t_spawn spawn);
 t_entity			*entity_penguin_spawn(t_game_data *game_data, t_spawn spawn);
+t_entity			*entity_audio_box_spawn(t_game_data *game_data, t_spawn spawn);
+t_entity			*entity_candle_spawn(t_game_data *game_data, t_spawn spawn);
 
 void				entity_player_update_movements(t_entity *self,
+						t_game_data *game_data);
+void				entity_player_update_holding(t_entity *self,
 						t_game_data *game_data);
 
 void				entity_penguin_update_movements(t_entity *self,
 						t_game_data *game_data);
 
 void				entity_torch_update(t_entity *self, t_game_data *game_data);
+void				entity_candle_update(t_entity *self, t_game_data *game_data);
 
 void				entities_update(t_game_data *game_data);
 void				entities_draw(t_game_data *game_data);

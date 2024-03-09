@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 03:24:57 by motero            #+#    #+#             */
-/*   Updated: 2024/02/25 05:14:23 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 03:52:47 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include "dynamic_array.h"
 # include "sparse_array.h"
 # include "settings.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 
 /*############################################################################*/
 /*                              STRUCTURES                                    */
@@ -54,10 +56,12 @@ enum e_action { a_move_forward,
 	a_move_down,
 	a_turn_left,
 	a_turn_right,
+	a_run,
 	a_increase_sector_ceil,
 	a_decrease_sector_ceil,
 	a_increase_sector_floor,
 	a_decrease_sector_floor,
+	a_interact,
 	ACTIONS_COUNT};
 
 typedef float			t_vector_f		__attribute__((vector_size (8)));
@@ -172,8 +176,23 @@ typedef enum e_game_assets
 	PENGUIN_TEXTURE_WALK_01,
 	PENGUIN_TEXTURE_WALK_02,
 	PENGUIN_TEXTURE_WALK_03,
+	CANDLE_TEXTURE,
 	GAME_ASSET_COUNT
 }	t_game_assets;
+
+
+typedef enum e_audio_assets
+{
+	PENGUIN_WALK_SOUND,
+	AMBIANT_DRONE_SOUND,
+	WALK_STONE_SOUND_00,
+	WALK_STONE_SOUND_01,
+	WALK_STONE_SOUND_02,
+	WALK_STONE_SOUND_03,
+	WALK_STONE_SOUND_04,
+	AUDIO_ASSET_COUNT
+}	t_audio_assets;
+
 
 
 typedef enum e_texture_id
@@ -186,6 +205,7 @@ typedef enum e_texture_id
 	TEXTURE_DUCK_WALK,
 	TEXTURE_PENGUIN_WALK,
 	TEXTURE_PENGUIN_IDLE,
+	TEXTURE_CANDLE,
 	TEXTURE_COUNT
 }	t_texture_id;
 
@@ -351,6 +371,7 @@ typedef enum e_img_fit_mode
 typedef struct s_inputs
 {
 	int		action_states[ACTIONS_COUNT];
+	int		action_states_once[ACTIONS_COUNT];
 }			t_inputs;
 
 typedef struct s_tree_node
@@ -557,6 +578,13 @@ typedef struct s_3d_render
 typedef struct s_entity_player_data
 {
 	t_vector4d	right;
+	ALuint		audio_footstep_source[5];
+	int			last_footstep_sound;
+	int			last_footstep_sound_time;
+	int			footstep_interval;
+	bool		holding_item;
+	int			holding_item_id;
+	int			holding_begin_time;
 }				t_entity_player_data;
 
 typedef struct s_entity_penguin_data
@@ -565,7 +593,23 @@ typedef struct s_entity_penguin_data
 	t_dijkstra	dijkstra;
 	t_vector4d	target;
 	bool		have_target;
+	ALuint		audio_source;
+	ALuint		audio_footstep_source[5];
+	int			last_footstep_sound;
+	int			last_footstep_sound_time;
+	int			footstep_interval;
 }				t_entity_penguin_data;
+
+typedef struct s_entity_audio_box_data
+{
+	ALuint			audio_source;
+	// bool			is_continuous;
+	// unsigned int	last_play_time;
+	// unsigned int	current_interval_duration;
+	// unsigned int	play_interval;
+	// double			play_interval_variance;
+}				t_entity_audio_box_data;
+
 
 typedef struct s_entity_torch_data
 {
@@ -581,6 +625,21 @@ typedef struct s_entity_torch_data
 	double			flicker_duration_variance;
 	double			flicker_intensity_variance;
 }				t_entity_torch_data;
+
+typedef struct s_entity_candle_data
+{
+	int				light_id;
+	double			light_intensity;
+	unsigned int	current_interval_duration;
+	unsigned int	last_flicker_time;
+	int				flicker_remaining_duration;
+	unsigned int	flicker_duration;
+	unsigned int	flicker_interval;
+	unsigned int	flicker_intensity;
+	double			flicker_interval_variance;
+	double			flicker_duration_variance;
+	double			flicker_intensity_variance;
+}				t_entity_candle_data;
 
 typedef struct s_entity t_entity;
 
@@ -601,6 +660,7 @@ typedef struct s_game_data
 	t_3d_render		game_view_render;
 	t_map_data		map_data;
 	t_inputs		*inputs;
+	ALuint			*audio_buffers;
 }	t_game_data;
 
 typedef enum e_entity_type
@@ -608,7 +668,9 @@ typedef enum e_entity_type
 	ENTITY_DEFAULT,
 	ENTITY_PLAYER,
 	ENTITY_TORCH,
-	ENTITY_PENGUIN
+	ENTITY_PENGUIN,
+	ENTITY_AUDIO_BOX,
+	ENTITY_CANDLE
 }					t_entity_type;
 
 typedef enum e_collision_model_type
@@ -649,6 +711,8 @@ typedef struct s_entity_physics
 	t_vector4d			acceleration;
 	double				friction;
 	t_collision_model	collision_model;
+	double				height;
+	double				width;
 }				t_entity_physics;
 
 
@@ -754,12 +818,19 @@ typedef struct s_bsp_tree_node_data
 	t_sector_data	sector_data;
 }	t_bsp_tree_node_data;
 
+typedef struct s_audio_data
+{
+	ALCdevice	*device;
+	ALCcontext	*context;
+}	t_audio_data;
+
 typedef struct s_cub
 {
 	t_img_data				texture[4];
 	t_img_data				screen;
 	t_img_data				ui_images[UI_ASSET_COUNT];
 	t_img_data				game_images[GAME_ASSET_COUNT];
+	ALuint					audio_buffers[AUDIO_ASSET_COUNT];
 	uint32_t				floor;
 	uint32_t				celling;
 	t_point2i				mouse_pos;
@@ -782,6 +853,7 @@ typedef struct s_cub
 	t_inputs				inputs; //TODO: move it
 	t_game_data				game_data;
 	t_texture_manager		texture_manager;
+	t_audio_data			audio_data;
 }				t_cub;
 
 typedef struct s_event_handlers {

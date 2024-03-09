@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 13:11:18 by motero            #+#    #+#             */
-/*   Updated: 2024/02/25 05:14:23 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 03:50:31 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,47 @@ void	map_destroy(t_map_data *map_data)
 	destroy_segment_tree(&map_data->bsp);
 }
 
+void	init_openal(t_cub *data)
+{
+	ALCdevice* device = alcOpenDevice(NULL);
+	if (!device)
+	{
+		printf("Error\nCould not open OpenAL device\n");
+		return ;
+	}
+
+	ALCcontext* context = alcCreateContext(device, NULL);
+	if (!context)
+	{
+		printf("Error\nCould not create OpenAL context\n");
+		alcCloseDevice(device);
+		return ;
+	}
+	alcMakeContextCurrent(context);
+	data->audio_data.device = device;
+	data->audio_data.context = context;
+
+}
+
+void	destory_openal(t_cub *data)
+{
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(data->audio_data.context);
+	alcCloseDevice(data->audio_data.device);
+}
+
+void	play_music(t_cub *data)
+{
+	ALuint source;
+	ALuint buffer;
+
+	buffer = data->audio_buffers[PENGUIN_WALK_SOUND];
+	alGenSources(1, &source);
+	alSourcei(source, AL_BUFFER, buffer);
+	alSourcePlay(source);
+}
+
+
 int	main(int argc, char **argv)
 {
 	t_cub					data;
@@ -199,14 +240,17 @@ int	main(int argc, char **argv)
 	ft_mlx_initialize_pointers(&data);
 	if (data.mlx_ptr == NULL)
 		return (1);
+	init_openal(&data);
 	if (initialize_and_preload_assets(&data))
 		return (free_everything(data), 1);
 	data.update = UPDATE;
 	data.game_state = MENU;
 	if (!main_parsing(&data, argv[1]))
 		return (free_everything(data), 1);
+	// play_music(&data);
 	if (game_logic(&data, &setup_canvas))
 		printf("Error\nGame logic failed");
 	free_everything(data);
 	free_setup_canvas(setup_canvas);
+	destory_openal(&data);
 }

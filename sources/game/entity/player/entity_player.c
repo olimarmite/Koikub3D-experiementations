@@ -33,8 +33,11 @@ void	entity_player_destroy(t_entity *self, t_game_data *game_data)
 
 static void	_init_player_data(
 	t_entity *self,
-	t_spawn spawn)
+	t_spawn spawn,
+	t_game_data *game_data)
 {
+	t_entity_player_data *const data = self->data;
+
 	self->physics.pos = spawn.pos;
 	self->physics.dir = spawn.dir;
 	self->physics.velocity = (t_vector4d){{0, 0, 0, 0}};
@@ -46,6 +49,17 @@ static void	_init_player_data(
 		= DEFAULT_PLAYER_HEIGHT;
 	self->physics.collision_model.dynamic_cylinder.radius
 		= DEFAULT_PLAYER_RADIUS;
+	data->holding_item = false;
+	data->holding_item_id = -1;
+	// data->audio_footstep_source[0] =
+
+	alGenSources(5, data->audio_footstep_source);
+	alSourcei(data->audio_footstep_source[0], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_00]);
+	alSourcei(data->audio_footstep_source[1], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_01]);
+	alSourcei(data->audio_footstep_source[2], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_02]);
+	alSourcei(data->audio_footstep_source[3], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_03]);
+	alSourcei(data->audio_footstep_source[4], AL_BUFFER, game_data->audio_buffers[WALK_STONE_SOUND_04]);
+
 }
 
 t_entity	*entity_player_spawn(t_game_data *game_data, t_spawn	spawn)
@@ -63,6 +77,6 @@ t_entity	*entity_player_spawn(t_game_data *game_data, t_spawn	spawn)
 	{
 		return (NULL);
 	}
-	_init_player_data(self, spawn);
+	_init_player_data(self, spawn, game_data);
 	return (self);
 }

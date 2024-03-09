@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 02:46:54 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/25 05:46:02 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 14:54:41 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_vector4d	_get_penguin_world_acceleration(
 	// 	return (acceleration);
 	// }
 	normalize_vector_3d(&acceleration);
-	acceleration.vec *= DEFAULT_PLAYER_ACCELERATION / 2;//3;
+	acceleration.vec *= DEFAULT_PLAYER_ACCELERATION * 10;//3;
 	return (acceleration);
 }
 
@@ -217,13 +217,40 @@ t_vector4d	get_target_from_id(
 }
 #include <assert.h>
 
+double	calc_dist(t_vector4d a, t_vector4d b)
+{
+	return (sqrt((a.x - b.x) * (a.x - b.x)
+			+ (a.y - b.y) * (a.y - b.y)));
+}
+
 void	update_path(t_entity *self, t_game_data *game_data)
 {
 	t_entity_penguin_data	*data;
 	int						current_node;
 	int						player_node;
+	int						dist;
 
 	data = self->data;
+	dist = calc_dist(game_data->state.player->physics.pos, self->physics.pos);
+	// if (data->have_target == false && dist < 20)
+	// {
+	// 	return ;
+	// }
+
+	// if (data->have_target == true && dist < 2)
+	// {
+	// 	data->have_target = false;
+	// 	return ;
+	// }
+
+	if (check_ray_reach_dest(
+			self->physics.pos,
+			game_data->state.player->physics.pos, &game_data->game_view_render))
+	{
+		data->have_target = false;
+		return ;
+	}
+
 	current_node = get_current_dijkstra_node(self, game_data);
 	player_node = get_current_dijkstra_node(game_data->state.player, game_data);
 
@@ -269,6 +296,47 @@ void	update_path(t_entity *self, t_game_data *game_data)
 		// 	data->target =
 		// }
 }
+static void playRandomFootstep(t_entity *self) {
+	t_entity_penguin_data *const data = self->data;
+    int numFootsteps = sizeof(data->audio_footstep_source) / sizeof(data->audio_footstep_source[0]);
+    int nextSound;
+
+	if (self->physics.acceleration.x == 0
+		&& self->physics.acceleration.y == 0)
+	{
+		data->last_footstep_sound_time = 0;
+		return;
+	}
+
+	data->footstep_interval = 10;
+
+	// alSourcefv(data->audio_source, AL_POSITION, sourcePos);
+
+
+	if (data->last_footstep_sound_time > 0)
+	{
+		data->last_footstep_sound_time -= 1;
+		return;
+	}
+
+    do {
+        nextSound = rand() % numFootsteps; // Randomly select the next sound
+    } while (nextSound == data->last_footstep_sound); // Make sure the next sound is different from the last played sound
+
+    // Play the selected sound
+	ALfloat sourcePos[] = {self->physics.pos.x, self->physics.pos.y, self->physics.pos.z};
+	alSourcefv(data->audio_footstep_source[nextSound], AL_POSITION, sourcePos);
+	alSourcef(data->audio_footstep_source[nextSound], AL_REFERENCE_DISTANCE, 5.0f);
+	// alSourcef(data->audio_footstep_source[nextSound], AL_ROLLOFF_FACTOR, 0.5f);
+	// alSourcef(data->audio_footstep_source[nextSound], AL_GAIN, 10);
+
+    alSourcePlay(data->audio_footstep_source[nextSound]);
+	printf("play sound\n");
+
+    // Update the last played sound index
+    data->last_footstep_sound = nextSound;
+	data->last_footstep_sound_time = data->footstep_interval;
+}
 
 
 void	entity_penguin_update_movements(t_entity *self, t_game_data *game_data)
@@ -282,5 +350,5 @@ void	entity_penguin_update_movements(t_entity *self, t_game_data *game_data)
 		= _get_penguin_world_acceleration(self, data, game_data);
 	_update_penguin_direction(self, data, game_data);
 	self->physics.acceleration.vec = world_space_acceleration.vec;
-	// print_djisrka(&data->dijkstra);
+	playRandomFootstep(self);
 }

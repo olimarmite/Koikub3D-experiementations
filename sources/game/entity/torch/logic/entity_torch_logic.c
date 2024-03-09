@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/13 02:02:29 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/21 02:49:59 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/03 10:37:44 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "structures.h"
 #include "maths_utils.h"
 
-void	_torch_flicker_effect(
+static void	_torch_flicker_effect(
 	t_entity_torch_data *data,
 	t_light *light,
 	t_game_data *game_data)
@@ -45,7 +45,7 @@ void	_torch_flicker_effect(
 	}
 }
 
-void	_update_position(
+static void	_update_position(
 	t_entity *self,
 	t_light *light,
 	t_3d_render *render)
@@ -64,7 +64,7 @@ void	_update_position(
 	light->dir = self->physics.dir;
 }
 
-void	_update_flickering_params(
+static void	_update_flickering_params(
 	t_entity *self,
 	t_entity_torch_data *data,
 	t_game_data *game_data)

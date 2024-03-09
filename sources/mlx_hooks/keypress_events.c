@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 21:35:41 by motero            #+#    #+#             */
-/*   Updated: 2024/02/04 22:23:19 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/04 16:08:33 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_movements_keys(int keysym, t_cub *data, int state)
 		if (g_key_to_action[i].key_id == keysym)
 		{
 			data->inputs.action_states[g_key_to_action[i].action] = state;
+			data->inputs.action_states_once[g_key_to_action[i].action] = state;
 			break ;
 		}
 		++i;

@@ -6,7 +6,7 @@
 /*   By: olimarti <olimarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 01:12:45 by olimarti          #+#    #+#             */
-/*   Updated: 2024/02/25 01:45:09 by olimarti         ###   ########.fr       */
+/*   Updated: 2024/03/08 03:43:33 by olimarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,16 @@ int	spawn_default_entities(t_game_data *game_data)
 	if (entity == NULL)
 		return (1);
 	game_data->state.player = entity;
-	entity = entity_torch_spawn(game_data, game_data->map_data.player_spawn);
+	// entity = entity_torch_spawn(game_data, game_data->map_data.player_spawn);
+	// if (entity == NULL)
+	// 	return (1);
+	entity = entity_candle_spawn(game_data, game_data->map_data.player_spawn);
 	if (entity == NULL)
 		return (1);
 	entity = entity_penguin_spawn(game_data, spawn);
+	if (entity == NULL)
+		return (1);
+	entity = entity_audio_box_spawn(game_data, spawn);
 	if (entity == NULL)
 		return (1);
 	return (0);
@@ -54,6 +60,7 @@ int	game_init(t_cub *data, t_canvas *canvas)
 	data->game_data.map_data.ceil_color.d = data->celling;
 	data->game_data.map_data.floor_color.d = data->floor;
 	data->game_data.inputs = &data->inputs;
+	data->game_data.audio_buffers = data->audio_buffers;
 	data->game_data.map_data.player_spawn.dir = data->player.dir;
 	data->game_data.map_data.player_spawn.pos = data->player.pos;
 	data->game_data.map_data.player_spawn.pos.z = 1;
